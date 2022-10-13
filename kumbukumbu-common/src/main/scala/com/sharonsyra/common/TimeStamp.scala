@@ -2,8 +2,8 @@ package com.sharonsyra.common
 
 import play.api.libs.json.{Format, Json}
 
-case class TimeStamp (
-  seconds: Int,
+case class TimeStamp(
+  seconds: Long,
   nanos: Int
 )
 

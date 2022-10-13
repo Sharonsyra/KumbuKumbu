@@ -4,9 +4,11 @@ import play.api.libs.json.{Format, Json}
 
 import java.util.UUID
 
+// to revisit
+
 case class GetKumbuKumbu (
-  kumbuKumbuUuid: UUID
-)
+                           kumbuKumbuUuid: UUID
+                         )
 
 object GetKumbuKumbu {
   implicit val format: Format[GetKumbuKumbu] = Json.format[GetKumbuKumbu]

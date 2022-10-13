@@ -6,8 +6,8 @@ import java.util.UUID
 
 case class CreateKumbuKumbu(
   kumbuKumbuUuid: UUID,
-  kumbukumbuTitle: String,
-  kumbukumbuContent: Option[String]
+  kumbuKumbuTitle: String,
+  kumbuKumbuContent: Option[String]
 )
 
 object CreateKumbuKumbu {
