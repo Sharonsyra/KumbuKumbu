@@ -4,8 +4,7 @@ import play.api.libs.json.{Format, Json}
 
 import java.util.UUID
 
-case class UpdateKumbuKumbu (
-  kumbuKumbuUuid: UUID,
+case class UpdateKumbuKumbu(
   kumbuKumbuTitle: Option[String],
   kumbuKumbuContent: Option[String]
 )

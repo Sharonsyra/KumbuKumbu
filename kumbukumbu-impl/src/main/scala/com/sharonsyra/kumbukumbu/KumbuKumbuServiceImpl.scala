@@ -14,6 +14,11 @@ class KumbuKumbuServiceImpl extends KumbuKumbuService {
 
   val kumbuKumbus: ArrayBuffer[KumbuKumbu] = ArrayBuffer[KumbuKumbu]()
 
+  /** Create a KumbuKumbu
+    *
+    * @return
+    *   KumbuKumbu created
+    */
   override def createKumbuKumbu: ServiceCall[CreateKumbuKumbu, KumbuKumbu] =
     ServiceCall { request =>
       val kumbuKumbuUuid = UUID.randomUUID()
@@ -39,20 +44,156 @@ class KumbuKumbuServiceImpl extends KumbuKumbuService {
       )
     }
 
+  /** Retrieve KumbuKumbu by uuid
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu
+    */
   override def getKumbuKumbu(
-    kumbuKumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu] = ???
+    kumbuKumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu] =
+    ServiceCall { _ =>
+      val kumbuKumbuResult = kumbuKumbus
+        .find(kumbu => kumbu.kumbuKumbuUuid.equals(kumbuKumbuUuid)) match {
+        case Some(kumbuKumbu) => kumbuKumbu
+        case None =>
+          throw new Exception(s"KumbuKumbu with id $kumbuKumbuUuid not found")
+      }
 
+      Future.successful(
+        kumbuKumbuResult
+      )
+
+    }
+
+  /** Retrieve KumbuKumbu by title
+    *
+    * @param kumbuKumbuTitle
+    *   title
+    * @return
+    *   KumbuKumbu
+    */
   override def searchKumbuKumbu(
-    kumbuKumbuTitle: String): ServiceCall[NotUsed, KumbuKumbu] = ???
+    kumbuKumbuTitle: String): ServiceCall[NotUsed, KumbuKumbu] =
+    ServiceCall { _ =>
+      val kumbuKumbuResult = kumbuKumbus
+        .find(kumbu => kumbu.kumbuKumbuTitle.equals(kumbuKumbuTitle)) match {
+        case Some(kumbuKumbu) => kumbuKumbu
+        case None =>
+          throw new Exception(
+            s"KumbuKumbu with title $kumbuKumbuTitle not found")
+      }
 
+      Future.successful(
+        kumbuKumbuResult
+      )
+
+    }
+
+  /** Update KumbuKumbu
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu updated
+    */
   override def updateKumbuKumbu(
-    kumbuKumbuUuid: UUID): ServiceCall[UpdateKumbuKumbu, KumbuKumbu] = ???
+    kumbuKumbuUuid: UUID): ServiceCall[UpdateKumbuKumbu, KumbuKumbu] =
+    ServiceCall { request =>
+      val timeNow = Instant.now()
 
+      val kumbuKumbuToUpdate: KumbuKumbu = kumbuKumbus
+        .find(kumbu => kumbu.kumbuKumbuUuid.equals(kumbuKumbuUuid)) match {
+        case Some(kumbuKumbu) => kumbuKumbu
+        case None =>
+          throw new Exception(s"KumbuKumbu with id $kumbuKumbuUuid not found")
+      }
+
+      val updatedKumbuKumbu: KumbuKumbu = kumbuKumbuToUpdate.copy(
+        kumbuKumbuTitle = request.kumbuKumbuTitle match {
+          case Some(value) => value
+          case None        => kumbuKumbuToUpdate.kumbuKumbuTitle
+        },
+        kumbuKumbuContent = request.kumbuKumbuContent match {
+          case Some(value) => Some(value)
+          case None        => kumbuKumbuToUpdate.kumbuKumbuContent
+        },
+        updatedAt = Some(
+          TimeStamp(seconds = timeNow.getEpochSecond, nanos = timeNow.getNano))
+      )
+
+      // Remove old kumbukumbu
+      kumbuKumbus -= kumbuKumbuToUpdate
+
+      // Update with the new kumbukumbu
+      kumbuKumbus += updatedKumbuKumbu
+
+      Future.successful(
+        updatedKumbuKumbu
+      )
+
+    }
+
+  /** Delete KumbuKumbu
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu deleted
+    */
   override def deleteKumbuKumbu(
-    kumbuKumbuUuid: UUID): ServiceCall[DeleteKumbuKumbu, KumbuKumbu] = ???
+    kumbuKumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu] =
+    ServiceCall { _ =>
+      val kumbuKumbuToDelete: KumbuKumbu = kumbuKumbus
+        .find(kumbu => kumbu.kumbuKumbuUuid.equals(kumbuKumbuUuid)) match {
+        case Some(kumbuKumbu) => kumbuKumbu
+        case None =>
+          throw new Exception(s"KumbuKumbu with id $kumbuKumbuUuid not found")
+      }
 
-  override def listKumbuKumbus: ServiceCall[NotUsed, ListKumbuKumbus] = ???
+      kumbuKumbus -= kumbuKumbuToDelete
 
+      Future.successful(
+        kumbuKumbuToDelete
+      )
+
+    }
+
+  /** List KumbuKumbus
+    *
+    * @return
+    *   List KumbuKumbus
+    */
+  override def listKumbuKumbus: ServiceCall[NotUsed, ListKumbuKumbus] =
+    ServiceCall { _ =>
+      Future.successful(
+        ListKumbuKumbus(kumbuKumbus)
+      )
+
+    }
+
+  /** Next KumbuKumbu
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu
+    */
   override def nextKumbuKumbu(
-    kumbukumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu] = ???
+    kumbuKumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu] =
+    ServiceCall { _ =>
+      val kumbuKumbuResult: KumbuKumbu = kumbuKumbus
+        .find(kumbu => kumbu.kumbuKumbuUuid.equals(kumbuKumbuUuid)) match {
+        case Some(kumbuKumbu) => kumbuKumbu
+        case None =>
+          throw new Exception(s"KumbuKumbu with id $kumbuKumbuUuid not found")
+      }
+
+      Future.successful(
+        kumbuKumbuResult
+      )
+
+    }
+
 }

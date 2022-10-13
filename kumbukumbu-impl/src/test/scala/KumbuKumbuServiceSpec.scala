@@ -39,6 +39,8 @@ class KumbuKumbuServiceSpec()(implicit ec: ExecutionContext)
 
       client.createKumbuKumbu.invoke(createKumbuKumbuRequest).map { response =>
         response.kumbuKumbuTitle shouldEqual "test note"
+        response.kumbuKumbuContent shouldEqual Some("test description")
+        response.updatedAt shouldBe None
       }
 
     }

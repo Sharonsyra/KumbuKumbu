@@ -10,27 +10,72 @@ import java.util.UUID
 
 trait KumbuKumbuService extends Service {
 
+  /** Create a KumbuKumbu
+    *
+    * @return
+    *   KumbuKumbu created
+    */
   def createKumbuKumbu: ServiceCall[CreateKumbuKumbu, KumbuKumbu]
 
+  /** Retrieve KumbuKumbu by uuid
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu
+    */
   def getKumbuKumbu(
     kumbuKumbuUuid: UUID
   ): ServiceCall[NotUsed, KumbuKumbu]
 
+  /** Retrieve KumbuKumbu by title
+    *
+    * @param kumbuKumbuTitle
+    *   title
+    * @return
+    *   KumbuKumbu
+    */
   def searchKumbuKumbu(
     kumbuKumbuTitle: String
   ): ServiceCall[NotUsed, KumbuKumbu]
 
+  /** Update KumbuKumbu
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu updated
+    */
   def updateKumbuKumbu(
     kumbuKumbuUuid: UUID
   ): ServiceCall[UpdateKumbuKumbu, KumbuKumbu]
 
+  /** Delete KumbuKumbu
+    *
+    * @param kumbuKumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu deleted
+    */
   def deleteKumbuKumbu(
     kumbuKumbuUuid: UUID
-  ): ServiceCall[DeleteKumbuKumbu, KumbuKumbu]
+  ): ServiceCall[NotUsed, KumbuKumbu]
 
+  /** List KumbuKumbus
+    *
+    * @return
+    *   List KumbuKumbus
+    */
   def listKumbuKumbus: ServiceCall[NotUsed, ListKumbuKumbus]
 
-  // next by created at or by updated at??
+  // Todo: Define next kumbuKumbu
+  /** Next KumbuKumbu
+    *
+    * @param kumbukumbuUuid
+    *   uuid
+    * @return
+    *   KumbuKumbu
+    */
   def nextKumbuKumbu(kumbukumbuUuid: UUID): ServiceCall[NotUsed, KumbuKumbu]
 
   override def descriptor: Descriptor = {
@@ -48,7 +93,7 @@ trait KumbuKumbuService extends Service {
         ),
         restCall(
           Method.GET,
-          pathPattern = "/api/kumbukumbus/:kumbukumbuTitle",
+          pathPattern = "/api/kumbukumbus/search/:kumbukumbuTitle",
           scalaMethod = searchKumbuKumbu _
         ),
         restCall(
