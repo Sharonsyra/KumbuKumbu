@@ -18,7 +18,7 @@ class KumbuKumbuServiceSpec()(implicit ec: ExecutionContext)
     with Matchers
     with BeforeAndAfterAll {
 
-  private val server = ServiceTest.startServer(ServiceTest.defaultSetup) {
+  private lazy val server = ServiceTest.startServer(ServiceTest.defaultSetup) {
     ctx: LagomApplicationContext =>
       new KumbuKumbuApplication(ctx) with LocalServiceLocator
   }
@@ -26,7 +26,9 @@ class KumbuKumbuServiceSpec()(implicit ec: ExecutionContext)
   val client: KumbuKumbuService =
     server.serviceClient.implement[KumbuKumbuService]
 
-  override protected def afterAll(): Unit = server.stop()
+  protected override def beforeAll(): Unit = server
+
+  protected override def afterAll(): Unit = server.stop()
 
   "The KumbuKumbu Service" should {
     "create kumbukumbu should successfully create a kumbukumbu" in {
